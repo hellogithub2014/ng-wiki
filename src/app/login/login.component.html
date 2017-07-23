@@ -1,0 +1,39 @@
+<!--formGroup和formControlName属性。 
+他们是Angular指令，用于把相应的HTML控件绑定到组件中
+的FormGroup和FormControl类型的属性上。-->
+
+<form [formGroup]="loginForm" (submit)='login()' novalidate>
+
+    <div class="form-group">
+        <label class="center-block">姓名:
+          <input class="form-control" formControlName="name">
+         </label>
+        <div *ngIf="formErrors.name" class="alert alert-danger">
+            {{ formErrors.name }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="center-block">一事通号:
+      <input class="form-control" formControlName="ystNumber" required>
+    </label>
+
+        <div *ngIf="formErrors.ystNumber" class="alert alert-danger">
+            {{ formErrors.ystNumber }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="center-block">邮箱:
+      <input class="form-control" formControlName="email">
+    </label>
+    </div>
+
+    <div style="margin-top: 1em">
+        <button type="submit" [disabled]="loginForm.pristine || loginForm.status==='INVALID'" class="btn btn-success">登录</button>
+    </div>
+
+</form>
+
+<p>Form value: {{ loginForm.value | json }}</p>
+<p>Form status: {{ loginForm.status | json }}</p>

@@ -1,0 +1,15 @@
+<!--<ng-container *ngIf="author">-->
+<div>
+    auhtor:{{author$|async|json}}
+</div>
+<article *ngFor="let article of articles$|async;let i=index" [article]='article'>
+</article>
+<!--</ng-container>-->
+<!--<p>灵感来了，写一篇~</p>
+<form>
+    <input type="text" name="title">
+    <textarea rows="5" cols="30"></textarea>
+    <input type="submit">
+</form>-->
+
+<button *ngIf="isLoginUser$|async" (click)='writeNewArticle()'>测试给当前作者添加新文章</button>

@@ -1,0 +1,4 @@
+<ng-container *ngIf="article">
+    <p>{{article.content}}</p>
+    <a [routerLink]="['../../article-list', {authorId:article.authorId}]" routerLinkActive="active" href="#">返回文章列表</a>
+</ng-container>

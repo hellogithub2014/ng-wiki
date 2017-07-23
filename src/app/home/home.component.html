@@ -1,0 +1,9 @@
+<md-list class="authors">
+    <md-list-item *ngFor='let author of authors' [routerLink]="['./article-list', {authorId:author.id}]">
+        {{author.name}}
+    </md-list-item>
+</md-list>
+
+<div class="article-list">
+    <router-outlet></router-outlet>
+</div>
