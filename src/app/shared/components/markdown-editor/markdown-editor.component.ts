@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewContainerRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+  ViewContainerRef,
+  EventEmitter
+} from '@angular/core';
 
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { EditorComponent } from './editor/editor.component';
@@ -12,6 +21,8 @@ export class MarkdownEditorComponent implements OnInit, AfterViewInit {
 
   @ViewChildren(EditorComponent)
   items: QueryList<EditorComponent>;
+
+  @Output() artcileChange: EventEmitter<{ title: string, content: string }> = new EventEmitter();
 
   ngAfterViewInit() {
     console.log(this.items);
@@ -28,7 +39,10 @@ export class MarkdownEditorComponent implements OnInit, AfterViewInit {
   }
   save(event) {
     console.log(event);
-    this.toastr.success('保存成功！', '系统提示');
+    this.toastr.success('保存成功！', '系统提示')
+      .then(_ => {
+        this.artcileChange.emit({ title: event.title, content: event.value });
+      })
   }
 
   // tslint:disable-next-line:member-ordering

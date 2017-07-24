@@ -18,7 +18,7 @@ export class ArticleService {
   }
 
   getAllArticles(): Observable<Article[]> {
-    return this.articlesSubject;
+    return this.articlesSubject.asObservable();
   }
 
   /**
