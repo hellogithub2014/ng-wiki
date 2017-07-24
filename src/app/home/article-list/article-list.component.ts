@@ -63,19 +63,20 @@ export class ArticleListComponent implements OnInit {
     this.isLoginUser$ = this.author$.combineLatest(this.loginService.loginUser, (author, user) => ({ author, user }))
       .do(({ author, user }) => console.log('isLoginUser$', author, user))
       .map(({ author, user }) => {
-        return (user && author.id === user.id) ? true : false; // 选中的作者是当前已登录的用户
+        // return (user && author.id === user.id) ? true : false; // 选中的作者是当前已登录的用户
+        return true;
       });
   }
 
   writeNewArticle() {
-    const newArticle = this.articleService.createArticle(this.author.id, `测试给${this.author.name}新增文章-标题`, '测试新增文章-内容');
-    this.authorService.addArticleToAuthor(newArticle, this.author);
-    this.articleService.addArticles(newArticle);
+    // const newArticle = this.articleService.createArticle(this.author.id, `测试给${this.author.name}新增文章-标题`, '测试新增文章-内容');
+    // this.authorService.addArticleToAuthor(newArticle, this.author);
+    // this.articleService.addArticles(newArticle);
 
-    this.createdArticles = [...this.createdArticles, newArticle];
-    this.newArticles$$.next(this.createdArticles);
+    // this.createdArticles = [...this.createdArticles, newArticle];
+    // this.newArticles$$.next(this.createdArticles);
     // TODO:
     // 1. 使用表单
+    this.router.navigate(['../write-article', this.author.id], { relativeTo: this.route });
   }
-
 }

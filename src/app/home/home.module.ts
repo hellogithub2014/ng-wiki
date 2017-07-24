@@ -1,45 +1,23 @@
-import { SharedModule } from './../shared/shared.module';
-import { WriteArticleComponent } from './write-article/write-article.component';
-import { ArticleListComponent } from './article-list/article-list.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from './home.component';
-import { RouterModule, Routes } from '@angular/router';
-import { ArticleComponent } from './article/article.component';
 import { MdCardModule, MdListModule } from '@angular/material';
+
+import { HomeRoutingModule } from './home-routing.module';
+import { SharedModule } from './../shared/shared.module';
+
+import { HomeComponent } from './home.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
-
-
-const homeRoutes: Routes = [
-  {
-    path: '',
-    component: HomeComponent,
-    children: [
-      {
-        path: 'article-list',
-        component: ArticleListComponent,
-      },
-      {
-        path: 'article-detail/:articleId',
-        component: ArticleDetailComponent,
-      },
-      {
-        path: '',
-        redirectTo: './article-list',
-        pathMatch: 'full'
-      },
-      // { path: '**', component: HomeComponent }
-    ]
-  },
-];
+import { ArticleComponent } from './article/article.component';
+import { ArticleListComponent } from './article-list/article-list.component';
+import { WriteArticleComponent } from './write-article/write-article.component';
 
 @NgModule({
   imports: [
     CommonModule,
     MdListModule,
     MdCardModule,
-    RouterModule.forChild(homeRoutes),
     SharedModule,
+    HomeRoutingModule
   ],
   exports: [HomeComponent],
   declarations: [
