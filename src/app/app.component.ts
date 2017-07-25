@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   echo() {
     this.http.post('/echo/echo.do', { test: 'testecho' }).subscribe(response => {
       console.log('echo------>', response);
-    });
+    }, console.error, console.log);
   }
 
   logout() {

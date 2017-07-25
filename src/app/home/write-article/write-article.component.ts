@@ -11,7 +11,6 @@ import { Author } from 'app/core';
   styleUrls: ['./write-article.component.css']
 })
 export class WriteArticleComponent implements OnInit {
-  public author$: Observable<Author>; // 作者流，切换切换列表时会变化
   public author: Author;
 
   constructor(
@@ -27,13 +26,13 @@ export class WriteArticleComponent implements OnInit {
     //   .switchMap((articleId: string) => this.articleService.getArticleById(articleId))
 
     // 获取作者流
-    this.author$ = this.route.params
+    this.route.params
       .map((params: Params) => {
         console.log('params', params);
         return +params['authorId'];
-      }) // get author id
+      })
       .switchMap((authorId: number) => this.authorService.getAuthorById(authorId)) // get author by id
-      .do(author => {
+      .subscribe(author => {
         this.author = author;
       }, console.error, console.log);
   }
@@ -48,7 +47,7 @@ export class WriteArticleComponent implements OnInit {
     const newArticle = this.articleService.createArticle(this.author.id, article.title, article.content);
     this.authorService.addArticleToAuthor(newArticle, this.author);
     this.articleService.addArticles(newArticle);
-
-    this.router.navigate(['../', this.author.id], { relativeTo: this.route });
+    // 因为当前的url为write-article/:authorId，一个../是取代掉:authorId的部分
+    this.router.navigate(['../../article-list', { authorId: this.author.id }], { relativeTo: this.route });
   }
 }

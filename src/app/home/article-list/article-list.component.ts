@@ -30,12 +30,6 @@ export class ArticleListComponent implements OnInit {
     // 获取作者流
     this.author$ = this.route.params
       .map((params: Params) => +params['authorId']) // get author id
-      .do((authorId: number) => {
-        // 在切换列表中的作者时，此组件会被复用，其中存储的各项值不会清空，ngOninit也只会执行一次。所以需要手动清除状态
-        console.log(`authorId: ${authorId}`);
-        this.createdArticles = [];
-        this.newArticles$$.next(this.createdArticles);
-      }, console.error, console.log)
       .switchMap((authorId: number) => this.authorService.getAuthorById(authorId)) // get author by id
       .do(author => {
         this.author = author;
@@ -48,12 +42,7 @@ export class ArticleListComponent implements OnInit {
      */
     this.articles$ = this.author$
       .map((author) => {
-        this.author = author;
         return author.articles; // get articles of author
-      })
-      .do(articles => console.log('articles$', articles))
-      .combineLatest(this.newArticles$$.asObservable(), (existArticles, newArticles) => { // new articles stream
-        return [...existArticles, ...newArticles];
       });
 
     /**
@@ -63,20 +52,12 @@ export class ArticleListComponent implements OnInit {
     this.isLoginUser$ = this.author$.combineLatest(this.loginService.loginUser, (author, user) => ({ author, user }))
       .do(({ author, user }) => console.log('isLoginUser$', author, user))
       .map(({ author, user }) => {
-        // return (user && author.id === user.id) ? true : false; // 选中的作者是当前已登录的用户
-        return true;
+        return (user && author.id === user.id) ? true : false; // 选中的作者是当前已登录的用户
+        // return true;
       });
   }
 
   writeNewArticle() {
-    // const newArticle = this.articleService.createArticle(this.author.id, `测试给${this.author.name}新增文章-标题`, '测试新增文章-内容');
-    // this.authorService.addArticleToAuthor(newArticle, this.author);
-    // this.articleService.addArticles(newArticle);
-
-    // this.createdArticles = [...this.createdArticles, newArticle];
-    // this.newArticles$$.next(this.createdArticles);
-    // TODO:
-    // 1. 使用表单
     this.router.navigate(['../write-article', this.author.id], { relativeTo: this.route });
   }
 }
