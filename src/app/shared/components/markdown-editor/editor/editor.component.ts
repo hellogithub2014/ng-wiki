@@ -43,7 +43,7 @@ export class EditorComponent implements OnInit {
   onSave() {
     this.save.emit({
       title: this.title,
-      value: this.smd.value()
+      value: this.renderer.render(this.smd.value())
     });
   }
 
