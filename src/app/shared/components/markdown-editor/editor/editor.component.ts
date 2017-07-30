@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { Component, ElementRef, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import * as SimpleMDE from 'simplemde';
 
@@ -16,7 +17,11 @@ export class EditorComponent implements OnInit {
   private smd;
   private renderer = md();
   @Output() save = new EventEmitter<{ [key: string]: any }>();
+  @Output() change = new EventEmitter<{ [key: string]: any }>();
+
   public title = '';
+
+  textArea = new FormControl();
 
   constructor(private el: ElementRef) { }
 
@@ -38,6 +43,8 @@ export class EditorComponent implements OnInit {
     };
     config = Object.assign({}, config);
     this.smd = new SimpleMDE(config);
+
+    this.onTextAreaValueChange();
   }
 
   onSave() {
@@ -45,6 +52,18 @@ export class EditorComponent implements OnInit {
       title: this.title,
       value: this.renderer.render(this.smd.value())
     });
+  }
+
+  onTextAreaValueChange() {
+    this.textArea.valueChanges
+      .debounceTime(400)
+      .distinctUntilChanged()
+      .subscribe(value => {
+        this.change.emit({
+          title: this.title,
+          value: this.renderer.render(this.smd.value())
+        });
+      });
   }
 
 }

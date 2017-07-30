@@ -18,7 +18,9 @@ import { EditorComponent } from './editor/editor.component';
   styleUrls: ['./markdown-editor.component.css']
 })
 export class MarkdownEditorComponent implements OnInit {
-  @Output() artcileChange: EventEmitter<{ title: string, content: string }> = new EventEmitter();
+  @Output() artcileSave: EventEmitter<{ title: string, content: string }> = new EventEmitter();
+
+  public currentArticle: { title: string, content: string };
 
   constructor(public toastr: ToastsManager, vcr: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vcr);
@@ -33,8 +35,13 @@ export class MarkdownEditorComponent implements OnInit {
     console.log(event);
     this.toastr.success('保存成功！', '系统提示')
       .then(_ => {
-        this.artcileChange.emit({ title: event.title, content: event.value });
+        this.artcileSave.emit({ title: event.title, content: event.value });
       });
+  }
+
+  change(event) {
+    console.log(event);
+    this.currentArticle = event;
   }
 
   // tslint:disable-next-line:member-ordering

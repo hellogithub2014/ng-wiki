@@ -1,7 +1,3 @@
 <div (window:resize)="setHeight($event)" [ngStyle]="style">
-    <editor (save)="save($event)"></editor>
+    <editor (save)="save($event)" (change)='change($event)'></editor>
 </div>
-
-<!--<div [ngStyle]="style">
-    <editor (save)="save($event)"></editor>
-</div>-->

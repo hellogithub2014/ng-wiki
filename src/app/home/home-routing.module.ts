@@ -6,6 +6,7 @@ import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
 import { WriteArticleComponent } from './write-article/write-article.component';
 
+import { CanDeactivateGuard } from './write-article/can-deactive-guard.service';
 
 const homeRoutes: Routes = [
   {
@@ -23,6 +24,7 @@ const homeRoutes: Routes = [
       {
         path: 'write-article/:authorId',
         component: WriteArticleComponent,
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: '',
@@ -41,5 +43,6 @@ const homeRoutes: Routes = [
   exports: [
     RouterModule
   ],
+  providers: [CanDeactivateGuard],
 })
 export class HomeRoutingModule { }
