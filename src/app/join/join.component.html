@@ -7,29 +7,29 @@
         2. 每个 input 元素都有name属性，Angular 表单用它注册控件。
       -->
     <form #authorForm="ngForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="name">姓名</label>
+        <div class="form-group row">
+            <label for="name" class="col-md-2">姓名</label>
             <!--当在表单中使用[(ngModel)]时，必须要定义name属性在内部，
             Angular 创建了一些FormControl，并把它们注册到NgForm指令，再将该指令附加到<form>标签。 
               注册每个FormControl时，使用name属性值作为键值。-->
-            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newAuthor.name" required>
+            <input type="text" class="form-control col-md-10" id="name" name="name" [(ngModel)]="newAuthor.name" required>
 
             <div *ngIf="formErrors.name" class="alert alert-danger">
                 {{ formErrors.name }}
             </div>
         </div>
-        <div class="form-group">
-            <label for="ystNumber">6位一事通账号</label>
-            <input type="text" class="form-control" id="ystNumber" name="ystNumber" [(ngModel)]="newAuthor.ystNumber" minlength="6" maxlength="6" onlyNumber required>
+        <div class="form-group row">
+            <label for="ystNumber" class="col-md-2">6位一事通账号</label>
+            <input type="text" class="form-control col-md-10" id="ystNumber" name="ystNumber" [(ngModel)]="newAuthor.ystNumber" minlength="6" maxlength="6" onlyNumber required>
 
             <div *ngIf="formErrors.ystNumber" class="alert alert-danger">
                 {{ formErrors.ystNumber }}
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="department">部门</label>
-            <select class="form-control" id="department" name="department" [(ngModel)]="newAuthor.department" required>
+        <div class="form-group row">
+            <label for="department" class="col-md-2">部门</label>
+            <select class="form-control col-md-10" id="department" name="department" [(ngModel)]="newAuthor.department" required>
                 <option *ngFor="let department of validDepartments" [value]="department">{{department}}</option>
             </select>
 
@@ -38,16 +38,16 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="speciality">专长</label>
-            <input type="text" class="form-control" id="speciality" name="speciality" [(ngModel)]="newAuthor.speciality">
+        <div class="form-group row">
+            <label for="speciality" class="col-md-2">专长</label>
+            <input type="text" class="form-control col-md-10" id="speciality" name="speciality" [(ngModel)]="newAuthor.speciality">
         </div>
-        <div class="form-group">
-            <label for="hobby">爱好</label>
-            <input type="text" class="form-control" id="hobby" name="hobby" [(ngModel)]="newAuthor.hobby">
+        <div class="form-group row">
+            <label for="hobby" class="col-md-2">爱好</label>
+            <input type="text" class="form-control col-md-10" id="hobby" name="hobby" [(ngModel)]="newAuthor.hobby">
         </div>
         <!--点击提交按钮会触发表单提交，即出发form的ngSubmit事件。 在最上面的form标签上注册这个事件-->
-        <button type="submit" class="btn btn-success" [disabled]="!authorForm.form.valid">提交审核</button>
+        <button type="submit" class="btn btn-success btn-lg col-md-4" [disabled]="!authorForm.form.valid">提交审核</button>
         <!--<button type="button" class="btn btn-default" (click)="addToApproval(); authorForm.reset()">提交审核</button>-->
     </form>
 </div>

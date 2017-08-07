@@ -1,9 +1,14 @@
-<md-list class="authors">
-    <md-list-item *ngFor='let author of authors' [routerLink]="['./article-list', {authorId:author.id}]">
-        {{author.name}}
-    </md-list-item>
-</md-list>
+<ng-container class="container">
+    <div class="row">
+        <md-list class="authors col-md-2" [disableRipple]='false'>
+            <md-list-item *ngFor='let author of authors' [routerLink]="['./article-list', {authorId:author.id}]">
+                <md-icon>face</md-icon>
+                {{author.name}}
+            </md-list-item>
+        </md-list>
 
-<div class="article-list">
-    <router-outlet></router-outlet>
-</div>
+        <div class="article-list col-md-10">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</ng-container>
