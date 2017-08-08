@@ -1,3 +1,4 @@
+import { CommentService } from './services/comment.service';
 import { DialogService } from './dialog.service';
 import { LoginService } from './login.service';
 import { ArticleService } from './article.service';
@@ -10,6 +11,12 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
   declarations: [],
-  providers: [AuthorService, ArticleService, LoginService, DialogService],
+  providers: [
+    AuthorService,
+    ArticleService,
+    LoginService,
+    DialogService,
+    CommentService,
+  ],
 })
 export class CoreModule { }
