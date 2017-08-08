@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MdCardModule, MdListModule, MdIconModule } from '@angular/material';
-
+import { MdCardModule, MdListModule, MdIconModule, MdChipsModule } from '@angular/material';
+import { ToastModule } from 'ng2-toastr/ng2-toastr';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { SharedModule } from './../shared/shared.module';
@@ -18,6 +18,8 @@ import { WriteArticleComponent } from './write-article/write-article.component';
     MdListModule,
     MdCardModule,
     MdIconModule,
+    MdChipsModule,
+    ToastModule.forRoot(),
     SharedModule,
     HomeRoutingModule
   ],

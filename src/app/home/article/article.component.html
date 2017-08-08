@@ -1,3 +1,16 @@
-<md-card (click)='showDetail()'>
-    <md-card-content>{{article?.title}}</md-card-content>
+<md-card>
+    <md-card-header>
+        <div md-card-avatar class="author-header-image"></div>
+        <md-card-title>{{article?.title}}</md-card-title>
+        <md-card-subtitle>
+            <md-chip-list>
+                <md-chip color="accent">{{article?.visitCount}}</md-chip>
+            </md-chip-list>
+        </md-card-subtitle>
+    </md-card-header>
+    <md-card-content (click)='showDetail()'>{{article?.content}}</md-card-content>
+    <md-card-actions>
+        <md-icon (click)="toggleFavorite()">favorite</md-icon> {{article?.likesCount}}
+        <md-icon (click)="share()">share</md-icon>{{article?.sharedCount}}
+    </md-card-actions>
 </md-card>
