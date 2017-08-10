@@ -3,6 +3,6 @@ export class Comment {
   articleId: string;
   content: string;
   date: string;
-  userId: string;
+  userId: number;
   replyList: number[]; // 回复列表
 }

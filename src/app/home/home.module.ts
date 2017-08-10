@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MdCardModule, MdListModule, MdIconModule, MdChipsModule } from '@angular/material';
@@ -20,6 +21,7 @@ import { CommentAreaComponent } from './comment-area/comment-area.component';
     MdCardModule,
     MdIconModule,
     MdChipsModule,
+    FormsModule,
     ToastModule.forRoot(),
     SharedModule,
     HomeRoutingModule

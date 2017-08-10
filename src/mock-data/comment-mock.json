@@ -4,21 +4,21 @@
         "articleId": "1",
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
-        "userId": "大漠",
+        "userId": 0,
         "replyList": []
     }, {
         "id": 2,
         "articleId": "1",
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
-        "userId": "大漠2",
+        "userId": 1,
         "replyList": []
     }, {
         "id": 3,
         "articleId": "1",
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
-        "userId": "大漠3",
+        "userId": 2,
         "replyList": []
     }]
 }

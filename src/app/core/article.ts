@@ -1,3 +1,4 @@
+import { Comment } from './models/comment.model';
 import { Author, mockAuthors } from './author';
 import ulid from 'ulid';
 
@@ -11,10 +12,12 @@ export class Article {
     public visitCount?: number,
     public likesCount?: number,
     public sharedCount?: number,
+    public comments?: Comment[],
   ) {
     this.visitCount = 0;
     this.likesCount = 0;
     this.sharedCount = 0;
+    this.comments = [];
   }
 }
 
