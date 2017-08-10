@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-11">
                 <form role="form">
                     <div class="form-group">
                         <textarea [(ngModel)]='commentContent' name="commentContent" class="form-control" rows="5" placeholder="5-140个字符，非法字符自动截断。"></textarea>
@@ -11,10 +11,16 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <div *ngFor="let comment of comments" class="comment-item-container">
-                    <h5>{{comment.content}}</h5>
-                    <p>{{comment.userName}} {{comment.date}}</p>
+            <div *ngFor="let comment of comments" class="comment-item-container col-md-11">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5>{{comment.content}}</h5>
+                        <p>{{comment.userName}} {{comment.date}}</p>
+                        <div *ngFor="let reply of comment.replyList">
+                            <h6>{{reply}}</h6>
+                        </div>
+                    </div>
+                    <button class="btn btn-info col-md-1" *ngIf="user" (click)="reply(comment)" type="button">回复</button>
                 </div>
             </div>
         </div>

@@ -13,6 +13,7 @@ import { ArticleComponent } from './article/article.component';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { WriteArticleComponent } from './write-article/write-article.component';
 import { CommentAreaComponent } from './comment-area/comment-area.component';
+import { CommentComponent } from './comment/comment.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { CommentAreaComponent } from './comment-area/comment-area.component';
     ArticleDetailComponent,
     WriteArticleComponent,
     CommentAreaComponent,
+    CommentComponent,
   ],
   providers: []
 })

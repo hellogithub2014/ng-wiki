@@ -59,4 +59,18 @@ export class CommentAreaComponent implements OnInit {
     this.comments = [...this.comments, comment];
     this.commentContent = '';
   }
+
+  reply(comment: Comment) {
+    const reply: Comment = {
+      id: Math.floor(Math.random() * (Math.pow(2, 53) - 1)),
+      articleId: this.article.id,
+      content: "测试回复评论",
+      date: moment().format('YYYY-MM-DD HH:mm:ss'),
+      userId: this.user.id,
+      userName: this.user.name,
+      replyList: [],
+    };
+
+    comment.replyList = [...comment.replyList, reply.id];
+  }
 }
