@@ -4,5 +4,6 @@ export class Comment {
   content: string;
   date: string;
   userId: number;
+  userName: string;
   replyList: number[]; // 回复列表
 }

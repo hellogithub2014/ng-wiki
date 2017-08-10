@@ -5,6 +5,7 @@
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
         "userId": 0,
+        "userName": "0号作者",
         "replyList": []
     }, {
         "id": 2,
@@ -12,6 +13,7 @@
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
         "userId": 1,
+        "userName": "1号作者",
         "replyList": []
     }, {
         "id": 3,
@@ -19,6 +21,7 @@
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
         "userId": 2,
+        "userName": "2号作者",
         "replyList": []
     }]
 }

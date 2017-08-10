@@ -1,9 +1,11 @@
+import { Component, OnInit, Input } from '@angular/core';
+import * as moment from 'moment';
+
 import { Article } from '../../core/article';
 import { User } from './../../core/user';
 import { LoginService } from './../../core/login.service';
 import { Comment } from '../../core/models/comment.model';
 import { CommentService } from './../../core/services/comment.service';
-import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'comment-area',
@@ -43,12 +45,16 @@ export class CommentAreaComponent implements OnInit {
    * @memberof CommentAreaComponent
    */
   addComment() {
-    const comment = new Comment();
-    comment.id = Math.floor(Math.random() * (Math.pow(2, 53) - 1));
-    comment.articleId = this.article.id;
-    comment.content = this.commentContent;
-    comment.date = '' + new Date();
-    comment.userId = this.user.id;
+    const comment: Comment = {
+      id: Math.floor(Math.random() * (Math.pow(2, 53) - 1)),
+      articleId: this.article.id,
+      content: this.commentContent,
+      date: moment().format('YYYY-MM-DD HH:mm:ss'),
+      userId: this.user.id,
+      userName: this.user.name,
+      replyList: [],
+    };
+
     this.commentService.addArticleComment(this.article, comment);
     this.comments = [...this.comments, comment];
     this.commentContent = '';
