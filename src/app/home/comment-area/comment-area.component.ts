@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import * as moment from 'moment';
 
 import { Article } from '../../core/article';
 import { User } from './../../core/user';
@@ -33,44 +32,50 @@ export class CommentAreaComponent implements OnInit {
   getCommentList(articleId: string) {
     this.commentService.getCommentList(articleId)
       .subscribe(
-      data => this.comments = data['items'],
+      commentList => {
+        this.comments = commentList.filter(comment => comment.to === -1); // 只获取直接评论文章的那些评论
+      },
       error => console.error(error)
       );
   }
 
 
   /**
-   * 给此文章添加评论，TODO：content和date有误
+   * 给此文章添加评论
    *
    * @memberof CommentAreaComponent
    */
   addComment() {
-    const comment: Comment = {
-      id: Math.floor(Math.random() * (Math.pow(2, 53) - 1)),
+    const comment: Comment = new Comment({
       articleId: this.article.id,
       content: this.commentContent,
-      date: moment().format('YYYY-MM-DD HH:mm:ss'),
       userId: this.user.id,
       userName: this.user.name,
-      replyList: [],
-    };
+    });
 
     this.commentService.addArticleComment(this.article, comment);
     this.comments = [...this.comments, comment];
     this.commentContent = '';
   }
 
-  reply(comment: Comment) {
-    const reply: Comment = {
-      id: Math.floor(Math.random() * (Math.pow(2, 53) - 1)),
+  reply(commentIndex: number) {
+    let comment = this.comments[commentIndex];
+
+    const reply: Comment = new Comment({
       articleId: this.article.id,
-      content: "测试回复评论",
-      date: moment().format('YYYY-MM-DD HH:mm:ss'),
+      content: '测试回复评论',
       userId: this.user.id,
       userName: this.user.name,
-      replyList: [],
-    };
+      to: comment.id,
+    });
 
-    comment.replyList = [...comment.replyList, reply.id];
+    this.commentService.addArticleComment(this.article, reply); // 将此回复加入文章的评论数组,这样就可以根据reply的id来查找回复
+    this.commentService.addReply2ArticleComment(this.article.id, comment.id, reply.id); // 将回复缓存起来
+    comment = Object.assign({}, comment); // 构造一个新对象，以让变更检测起作用
+    this.comments = [
+      ...this.comments.slice(0, commentIndex),
+      comment,
+      ...this.comments.slice(commentIndex + 1)
+    ];
   }
 }

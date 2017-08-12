@@ -1,3 +1,8 @@
-<p>
-  comment works!
-</p>
+<div *ngIf='comment'>
+    <!-- comment.to等于-1表示此评论是直接回复的文章，而不是回复其他评论 -->
+    <div [class.indent]="comment.to !==-1">
+        <p>{{comment.userName}} <span *ngIf='comment.to !== -1'>回复 {{userOfCommentTo}} </span> {{comment.date}}</p>
+        <p>{{comment.content}}</p>
+        <comment *ngFor="let reply of relpyList" [comment]='reply'></comment>
+    </div>
+</div>

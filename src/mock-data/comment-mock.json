@@ -5,23 +5,26 @@
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
         "userId": 0,
-        "userName": "0号作者",
-        "replyList": []
+        "userName": "测试用户1",
+        "replyList": [],
+        "to": -1
     }, {
         "id": 2,
         "articleId": "1",
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
         "userId": 1,
-        "userName": "1号作者",
-        "replyList": []
+        "userName": "测试用户2",
+        "replyList": [],
+        "to": -1
     }, {
         "id": 3,
         "articleId": "1",
         "content": "这是评论的内容。。。",
         "date": "2016-09-09 12:00:09",
         "userId": 2,
-        "userName": "2号作者",
-        "replyList": []
+        "userName": "测试用户3",
+        "replyList": [],
+        "to": -1
     }]
 }
