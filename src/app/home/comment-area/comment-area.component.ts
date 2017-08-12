@@ -58,15 +58,16 @@ export class CommentAreaComponent implements OnInit {
     this.commentContent = '';
   }
 
-  reply(commentIndex: number) {
+  reply(replyObj: { to: number, content: string }, commentIndex: number) {
     let comment = this.comments[commentIndex];
 
     const reply: Comment = new Comment({
       articleId: this.article.id,
-      content: '测试回复评论',
+      content: replyObj.content,
       userId: this.user.id,
       userName: this.user.name,
-      to: comment.id,
+      // to: comment.id,
+      to: replyObj.to,
     });
 
     this.commentService.addArticleComment(this.article, reply); // 将此回复加入文章的评论数组,这样就可以根据reply的id来查找回复

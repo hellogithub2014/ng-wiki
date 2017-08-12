@@ -1,4 +1,4 @@
-import { SimpleChanges, Component, OnChanges, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 import { CommentService } from './../../core/services/comment.service';
 import { Comment } from '../../core/models/comment.model';
@@ -10,13 +10,16 @@ import { Comment } from '../../core/models/comment.model';
 })
 export class CommentComponent implements OnInit, OnChanges {
   @Input() comment: Comment;
+  @Input() canReply: boolean; // 是否能够回复
+  @Output() addReply: EventEmitter<{ to: number, content: string }> = new EventEmitter();
   relpyList: Comment[];
-
+  canReplyButtonDisplay: boolean; //回复按钮是否可见
 
   constructor(
     public commentService: CommentService,
   ) {
     this.relpyList = [];
+    this.canReplyButtonDisplay = false;
   }
 
   public ngOnInit(): void {
@@ -48,5 +51,28 @@ export class CommentComponent implements OnInit, OnChanges {
       return comment.userName;
     }
     return '无名氏';
+  }
+
+
+  /**
+   * 回复此评论,这里采用了“组件递归”的方法来处理文章评论以及评论的回复。
+   * 在处理事件时，通过断点调试发现事件对象的类型入函数参数所示
+   *
+   * @memberof CommentComponent
+   */
+  reply(to: number, replyObj: { to: number, content: string }) {
+    // TODO：使用弹窗表单添加真实评论
+    if (replyObj) {
+      this.addReply.emit({ to, content: replyObj.content });
+    } else {
+      this.addReply.emit({ to, content: '测试回复评论' });
+    }
+  }
+
+  displayReplyButton() {
+    this.canReplyButtonDisplay = true;
+  }
+  hideReplyButton() {
+    this.canReplyButtonDisplay = false;
   }
 }
