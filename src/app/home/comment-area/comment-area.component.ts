@@ -5,6 +5,7 @@ import { User } from './../../core/user';
 import { LoginService } from './../../core/login.service';
 import { Comment } from '../../core/models/comment.model';
 import { CommentService } from './../../core/services/comment.service';
+import { WriteCommentComponent } from './../write-comment/write-comment.component';
 
 @Component({
   selector: 'comment-area',

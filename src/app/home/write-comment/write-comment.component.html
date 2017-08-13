@@ -1,0 +1,19 @@
+<h1 md-dialog-title>Dialog</h1>
+<div md-dialog-content class="container">
+    <div class="row comment-content-container">{{navParams?.commentContent}}</div>
+    <div class="row reply-content-container">
+        <div class="col-md-12">
+            <form role="form">
+                <div class="form-group">
+                    <textarea [(ngModel)]='replyContent' name="replyContent" class="form-control" rows="5" placeholder="5-140个字符，非法字符自动截断。"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div md-dialog-actions>
+    <!-- md-dialog-close没起作用。。。 收到的是undefined -->
+    <!-- <button md-button md-dialog-close="Option 1">Option 1</button> -->
+    <button class="btn btn-danger" md-button (click)="close()">关闭</button>
+    <button type="button" class="btn btn-info" [disabled]="!canReply" (click)='submitReply()'>提交评论</button>
+</div>

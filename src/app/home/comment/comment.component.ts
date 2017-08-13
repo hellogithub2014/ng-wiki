@@ -1,7 +1,17 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { MdDialog } from '@angular/material';
 
 import { CommentService } from './../../core/services/comment.service';
 import { Comment } from '../../core/models/comment.model';
+import { WriteCommentComponent } from './../write-comment/write-comment.component';
 
 @Component({
   selector: 'comment',
@@ -13,10 +23,11 @@ export class CommentComponent implements OnInit, OnChanges {
   @Input() canReply: boolean; // 是否能够回复
   @Output() addReply: EventEmitter<{ to: number, content: string }> = new EventEmitter();
   relpyList: Comment[];
-  canReplyButtonDisplay: boolean; //回复按钮是否可见
+  canReplyButtonDisplay: boolean; // 回复按钮是否可见
 
   constructor(
     public commentService: CommentService,
+    public dialog: MdDialog,
   ) {
     this.relpyList = [];
     this.canReplyButtonDisplay = false;
@@ -61,13 +72,29 @@ export class CommentComponent implements OnInit, OnChanges {
    * @memberof CommentComponent
    */
   reply(to: number, replyObj: { to: number, content: string }) {
-    // TODO：使用弹窗表单添加真实评论
+    // TODO：使用PrimeNG和ANgular material两种弹窗+表单添加真实评论
     if (replyObj) {
       this.addReply.emit({ to, content: replyObj.content });
     } else {
-      this.addReply.emit({ to, content: '测试回复评论' });
+      this.openCommentDialog((result) => {
+        if (result.trim() !== '') {
+          this.addReply.emit({ to, content: result });
+        }
+      });
     }
   }
+
+  openCommentDialog(resultCallback: (result: string) => void) {
+    const dialogRef = this.dialog.open(WriteCommentComponent, {
+      data: { commentContent: this.comment.content },
+      width: '300px',
+      height: '300px',
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      resultCallback(result);
+    });
+  }
+
 
   displayReplyButton() {
     this.canReplyButtonDisplay = true;

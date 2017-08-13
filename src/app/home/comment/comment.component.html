@@ -10,6 +10,7 @@
             <span class="col-md-11">{{comment.content}} </span>
             <button [hidden]='!canReplyButtonDisplay' class="btn btn-info col-md-1" *ngIf="canReply" (click)="reply(comment.id)" type="button">回复</button>
         </p>
+        <!-- 此评论的回复列表 -->
         <comment *ngFor="let commentReply of relpyList" [comment]='commentReply' [canReply]='canReply' (addReply)="reply(commentReply.id,$event)"></comment>
     </div>
 </ng-container>
