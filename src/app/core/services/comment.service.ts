@@ -1,6 +1,6 @@
 import { Article } from './../article';
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
 
@@ -8,7 +8,8 @@ import { Comment } from '../models/comment.model';
 
 @Injectable()
 export class CommentService {
-  commentListURL = 'mock-data/comment-mock.json';
+  // commentListURL = 'mock-data/comment-mock.json';
+  commentListURL = '/ngWikiBe/comments/comment-list';
   commentsCahe: Map<string, Array<Comment>>;
 
   constructor(public http: Http) {
@@ -21,23 +22,26 @@ export class CommentService {
       return Observable.of(this.commentsCahe.get(articleId));
     }
     // 否则获取mock数据，然后放入缓存
-    return this.http.get(this.commentListURL)
+    return this.http.post(this.commentListURL,
+      JSON.stringify({ articleId }), {
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      })
       .map((res: Response) => res.json()['items'])
       // 因为mock的评论数据的articleId都是写死的，为了根据不同的文章mock不同的评论，将所有评论的articleId设为传入的文章id
-      .map(comments => comments.map(comment => Object.assign({}, comment, { articleId })))
+      // .map(comments => comments.map(comment => Object.assign({}, comment, { articleId })))
       .do(comments => {
         this.commentsCahe.set(articleId, comments);
       });
   }
 
   addArticleComment(article: Article, comment: Comment) {
-    article.comments = [...article.comments, comment];
+    article.comments = [...article.comments, comment.id];
 
     this.commentsCahe.get(article.id).push(comment); // 评论放入缓存
   }
 
   addReply2ArticleComment(articleId: string, commentId: number, replyId: number) {
-    let comment = this.getCommentById(articleId, commentId);
+    const comment = this.getCommentById(articleId, commentId);
     if (comment) {
       comment.replyList.push(replyId);
     }

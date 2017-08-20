@@ -4,8 +4,6 @@ import { Author, mockAuthors } from './author';
 import { Article, mockArticles } from './article';
 import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs/Rx';
 
-import 'rxjs/add/operator/first';
-
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -38,15 +36,14 @@ export class AuthorService {
    * @memberof AuthorService
    */
   getAuthorById(authorId: number): Observable<Author> {
-    // const findedAuthor = this.authors.find(author => author.id === authorId);
-    // if (findedAuthor) {
-    //   return Observable.of(findedAuthor);
-    // } else {
-    //   return Observable.of(null);
-
-    // }
-    return this.http.get(`/ngWikiBe/users/author/${authorId}`)
-      .map(res => res.json());
+    // 先从缓存中查找，找不到时再去数据库查
+    const findedAuthor = this.authors.find(author => author.id === authorId);
+    if (findedAuthor) {
+      return Observable.of(findedAuthor);
+    } else {
+      return this.http.get(`/ngWikiBe/users/author/${authorId}`)
+        .map(res => res.json());
+    }
   }
 
 

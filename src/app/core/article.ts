@@ -12,7 +12,7 @@ export class Article {
     public visitCount?: number,
     public likesCount?: number,
     public sharedCount?: number,
-    public comments?: Comment[],
+    public comments?: number[],
   ) {
     this.visitCount = 0;
     this.likesCount = 0;

@@ -54,14 +54,16 @@ export class WriteArticleComponent implements OnInit, CanComponentDeactivate {
    * @memberof WriteArticleComponent
    */
   saveArticle(article: { title: string, content: string }) {
-    const newArticle = this.articleService.createArticle(this.author.id, article.title, article.content);
-    this.authorService.addArticleToAuthor(newArticle, this.author);
-    this.articleService.addArticles(newArticle);
+    this.articleService.createArticle(this.author.id, article.title, article.content)
+      .subscribe(newArticle => {
+        this.authorService.addArticleToAuthor(newArticle, this.author);
+        this.articleService.addArticles(newArticle);
 
-    this.savedNewArticle = true; // 设置标志，以绕过CanDeactice路由守卫
+        this.savedNewArticle = true; // 设置标志，以绕过CanDeactice路由守卫
 
-    // 因为当前的url为write-article/:authorId，一个../是取代掉:authorId的部分
-    this.router.navigate(['../../article-list', { authorId: this.author.id }], { relativeTo: this.route });
+        // 因为当前的url为write-article/:authorId，一个../是取代掉:authorId的部分
+        this.router.navigate(['../../article-list', { authorId: this.author.id }], { relativeTo: this.route });
+      });
   }
 
   canDeactivate(): Promise<boolean> | boolean {

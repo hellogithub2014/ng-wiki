@@ -13,11 +13,30 @@ export class ArticleService {
   constructor(
     private http: Http,
   ) {
-    this.articles = mockArticles;
+    // this.articles = mockArticles;
   }
 
-  createArticle(authorId: number, title: string, content: string): Article {
-    return new Article(ulid(), authorId, title, content);
+  /**
+   * 创建新文章
+   *
+   * @param {number} authorId
+   * @param {string} title
+   * @param {string} content
+   * @returns {Observable<Article>}
+   * @memberof ArticleService
+   */
+  createArticle(authorId: number, title: string, content: string): Observable<Article> {
+    return this.http.post('/ngWikiBe/articles/create-article',
+      JSON.stringify({ authorId, title, content }), {
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      })
+      .map(res => {
+        const article = new Article(res.json(), authorId, title, content);
+        this.articles.push(article);
+        return article;
+      });
+
+    // return new Article(ulid(), authorId, title, content);
   }
 
   getAllArticles(): Observable<Article[]> {
@@ -33,11 +52,27 @@ export class ArticleService {
    * @memberof ArticleService
    */
   getArticleById(articleId: string): Observable<Article> {
-    return this.getAllArticles()
-      .switchMap(articles => Observable.from(articles))
-      .find(article => article.id === articleId);
+    // return this.getAllArticles()
+    //   .switchMap(articles => Observable.from(articles))
+    //   .find(article => article.id === articleId);
+    // 先从缓存中查找，找不到时再去数据库查
+    const findedArticle = this.articles.find(article => article.id === articleId);
+    if (findedArticle) {
+      return Observable.of(findedArticle);
+    } else {
+      return this.http.get(`/ngWikiBe/articles/article/${articleId}`)
+        .map(res => res.json());
+    }
   }
 
+
+  /**
+   * 根据文章id列表批量获取文章，TODO: 根据先看缓存中有没有，没有再去数据库查询
+   *
+   * @param {string[]} articleIdList
+   * @returns {Observable<Article[]>}
+   * @memberof ArticleService
+   */
   getArticleListById(articleIdList: string[]): Observable<Article[]> {
     return this.http.post('/ngWikiBe/articles/articles',
       JSON.stringify({ idList: articleIdList.join(',') }), {
