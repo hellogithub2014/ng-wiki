@@ -35,13 +35,6 @@ export class AppComponent implements OnInit {
           this.availableOperation = '登录';
         }
       });
-    this.echo();
-  }
-
-  echo() {
-    this.http.post('/echo/echo.do', { test: 'testecho' }).subscribe(response => {
-      console.log('echo------>', response);
-    }, console.error, console.log);
   }
 
   logout() {

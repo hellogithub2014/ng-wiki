@@ -1,3 +1,4 @@
+import { Http, Response } from '@angular/http';
 import { ArticleService } from './article.service';
 import { Author, mockAuthors } from './author';
 import { Article, mockArticles } from './article';
@@ -12,13 +13,21 @@ export class AuthorService {
   private authorsSubject: BehaviorSubject<Author[]> = new BehaviorSubject(mockAuthors);
   private authors: Author[] = [];
 
-  constructor(private articleService: ArticleService) {
-    this.authors = mockAuthors;
-    this.mockSomeArticlesToAuthors();
+  constructor(
+    public http: Http,
+    private articleService: ArticleService
+  ) {
+    // this.authors = mockAuthors;
+    // this.mockSomeArticlesToAuthors();
   }
 
   getAllAuthors(): Observable<Author[]> {
-    return this.authorsSubject.asObservable();
+    return this.http.get('/ngWikiBe/users/author-list')
+      .map((res: Response) => res.json())
+      .do(items => {
+        this.authors = items;
+        this.authorsSubject.next(this.authors);
+      });
   }
 
   /**
@@ -29,17 +38,15 @@ export class AuthorService {
    * @memberof AuthorService
    */
   getAuthorById(authorId: number): Observable<Author> {
-    const findedAuthor = this.authors.find(author => author.id === authorId);
-    if (findedAuthor) {
-      return Observable.of(findedAuthor);
-    } else {
-      return Observable.of(null);
+    // const findedAuthor = this.authors.find(author => author.id === authorId);
+    // if (findedAuthor) {
+    //   return Observable.of(findedAuthor);
+    // } else {
+    //   return Observable.of(null);
 
-    }
-
-    // return this.getAllAuthors()
-    //   .switchMap(authors => Observable.from(authors))
-    //   .find(author => author.id === authorId);
+    // }
+    return this.http.get(`/ngWikiBe/users/author/${authorId}`)
+      .map(res => res.json());
   }
 
 
@@ -54,7 +61,7 @@ export class AuthorService {
   addArticleToAuthor(article: Article, author: Author) {
     this.authors = this.authors.map(_author => {
       if (_author.id === author.id) {
-        return Object.assign({}, _author, { articles: [..._author.articles, article] });
+        return Object.assign({}, _author, { articles: [..._author.articles, article.id] });
       } else {
         return _author;
       }
@@ -91,7 +98,7 @@ export class AuthorService {
 
       for (let i = startIndex; i < startIndex + articlesCountPerAuthor; i++) {
         mockArticles[i].authorId = author.id; // 文章分配作者
-        author.articles = [...author.articles, mockArticles[i]]; // 作者分配文章
+        author.articles = [...author.articles, mockArticles[i].id]; // 作者分配文章
       }
 
       return author;

@@ -1,3 +1,4 @@
+import { Http, Headers } from '@angular/http';
 import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs/Rx';
 import { Article, mockArticles } from './article';
 import { Injectable } from '@angular/core';
@@ -9,7 +10,9 @@ export class ArticleService {
   private articlesSubject: BehaviorSubject<Article[]> = new BehaviorSubject(mockArticles);
   private articles: Article[] = [];
 
-  constructor() {
+  constructor(
+    private http: Http,
+  ) {
     this.articles = mockArticles;
   }
 
@@ -33,6 +36,14 @@ export class ArticleService {
     return this.getAllArticles()
       .switchMap(articles => Observable.from(articles))
       .find(article => article.id === articleId);
+  }
+
+  getArticleListById(articleIdList: string[]): Observable<Article[]> {
+    return this.http.post('/ngWikiBe/articles/articles',
+      JSON.stringify({ idList: articleIdList.join(',') }), {
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      })
+      .map(res => res.json());
   }
 
   addArticles(...newArticles: Article[]) {
