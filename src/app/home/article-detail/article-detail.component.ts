@@ -13,7 +13,7 @@ import { ArticleService } from '../../core/article.service';
 export class ArticleDetailComponent implements OnInit {
   articleId: number;
   article: Article;
-  articleContent: string = '';
+  articleContent = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -24,8 +24,8 @@ export class ArticleDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.params
-      .map((params: Params) => this.articleId = params['articleId'])
-      .switchMap((articleId: string) => this.articleService.getArticleById(articleId))
+      .map((params: Params) => this.articleId = +params['articleId'])
+      .switchMap((articleId: number) => this.articleService.getArticleById(articleId))
       .subscribe(article => {
         this.article = article;
         this.articleContent = this.sanitizer.sanitize(

@@ -13,16 +13,16 @@ export class Author {
   public name: string;
   public ystNumber: string; // 一事通账号
   public department: string; // 部门
-  public articles: string[];
+  public articles: number[];
   public speciality: string; // 专长
   public hobby: string; // 爱好
 
   constructor(
-    id: number = Math.floor(Math.random() * (Math.pow(2, 53) - 1)),
+    id: number = 1,
     name: string = '无名氏',
     ystNumber: string = '', // 一事通账号
     department: string = departments[0], // 部门
-    articles: string[] = [],
+    articles: number[] = [],
     speciality?: string, // 专长
     hobby?: string, // 爱好
   ) {

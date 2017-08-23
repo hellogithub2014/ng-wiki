@@ -51,7 +51,7 @@ export class ArticleService {
    *
    * @memberof ArticleService
    */
-  getArticleById(articleId: string): Observable<Article> {
+  getArticleById(articleId: number): Observable<Article> {
     // return this.getAllArticles()
     //   .switchMap(articles => Observable.from(articles))
     //   .find(article => article.id === articleId);
@@ -73,7 +73,7 @@ export class ArticleService {
    * @returns {Observable<Article[]>}
    * @memberof ArticleService
    */
-  getArticleListById(articleIdList: string[]): Observable<Article[]> {
+  getArticleListById(articleIdList: number[]): Observable<Article[]> {
     return this.http.post('/ngWikiBe/articles/articles',
       JSON.stringify({ idList: articleIdList.join(',') }), {
         headers: new Headers({ 'Content-Type': 'application/json' })

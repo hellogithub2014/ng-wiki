@@ -10,13 +10,16 @@ import { Comment } from '../models/comment.model';
 export class CommentService {
   // commentListURL = 'mock-data/comment-mock.json';
   commentListURL = '/ngWikiBe/comments/comment-list';
-  commentsCahe: Map<string, Array<Comment>>;
+  storeCommentUrl = '/ngWikiBe/comments/add-comment';
+  addArticleCommentUrl = '/ngWikiBe/comments/add-article-comment';
+  addCommentReplyUrl = '/ngWikiBe/comments/add-comment-reply';
+  commentsCahe: Map<number, Array<Comment>>;
 
   constructor(public http: Http) {
     this.commentsCahe = new Map();
   }
 
-  getCommentList(articleId: string): Observable<Comment[]> {
+  getCommentList(articleId: number): Observable<Comment[]> {
     // 如果已经在缓存中了，那么直接从缓存中拿
     if (this.commentsCahe.has(articleId)) {
       return Observable.of(this.commentsCahe.get(articleId));
@@ -34,17 +37,58 @@ export class CommentService {
       });
   }
 
-  addArticleComment(article: Article, comment: Comment) {
-    article.comments = [...article.comments, comment.id];
-
-    this.commentsCahe.get(article.id).push(comment); // 评论放入缓存
+  /**
+   * 添加文章评论，成功时流中产生true，失败发出false
+   *
+   * @param {Comment} comment
+   * @returns {Observable<boolean>} 结果流
+   * @memberof CommentService
+   */
+  addArticleComment(comment: Comment): Observable<boolean> {
+    return this.http.post(this.addArticleCommentUrl,
+      JSON.stringify(comment), {
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      })
+      .map(res => {
+        const result: { commentId: number, commentDate: string; } = res.json();
+        if (result) {
+          comment.id = result.commentId;
+          comment.date = result.commentDate;
+          this.commentsCahe.get(comment.articleId).push(comment); // 评论放入缓存
+          return true;
+        }
+        return false;
+      });
   }
 
-  addReply2ArticleComment(articleId: string, commentId: number, replyId: number) {
-    const comment = this.getCommentById(articleId, commentId);
-    if (comment) {
-      comment.replyList.push(replyId);
+
+  /**
+   * 回复文章评论，成功时流中产生true，失败发出false
+   *
+   * @param {Comment} comment
+   * @returns {Observable<boolean>}  结果流
+   * @memberof CommentService
+   */
+  addReply2Comment(comment: Comment): Observable<boolean> {
+    const repliedComment = this.getCommentById(comment.articleId, comment.to); // 被回复的评论
+    if (repliedComment) {
+      return this.http.post(this.addCommentReplyUrl, // 发送后台请求
+        JSON.stringify(comment), {
+          headers: new Headers({ 'Content-Type': 'application/json' })
+        })
+        .map(res => {
+          const result: { commentId: number, commentDate: string; } = res.json(); // 后台返回结果，失败时为null
+          if (result) {
+            comment.id = result.commentId;
+            comment.date = result.commentDate;
+            this.commentsCahe.get(comment.articleId).push(comment); // 评论放入缓存
+            repliedComment.replyList.push(comment.id); // 存储评论的回复
+            return true;
+          }
+          return false;
+        });
     }
+    return Observable.of(false);
   }
 
   /**
@@ -56,7 +100,7 @@ export class CommentService {
    * @returns 返回对应的评论， 如果找不到，返回undefined
    * @memberof CommentService
    */
-  getCommentById(articleId: string, commentId: number) {
+  getCommentById(articleId: number, commentId: number) {
     const articleComments = this.commentsCahe.get(articleId);
     if (!articleComments) {
       return undefined;

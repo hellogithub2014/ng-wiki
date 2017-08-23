@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 export class Comment {
   id: number; // 唯一id
-  articleId: string; // 回复的文章id
+  articleId: number; // 回复的文章id
   content: string; // 内容
   date: string; // 日期
   userId: number; // 写评论的用户id
@@ -11,7 +11,7 @@ export class Comment {
   to: number; // 此评论回复的某个其他评论的id，若是直接回复的文章，则to为-1
 
   constructor(value: {
-    articleId: string,
+    articleId: number,
     content: string,
     userId: number,
     userName: string,
