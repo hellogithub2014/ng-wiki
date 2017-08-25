@@ -2,15 +2,6 @@ import { Comment } from './models/comment.model';
 import { Author, mockAuthors } from './author';
 import ulid from 'ulid';
 
-/**
- *
- * TODO  回复评论功能
- *       Article.id 改为number
- *       点击其他文章会报错
- *
- * @export
- * @class Article
- */
 export class Article {
   constructor(
     public id: number,

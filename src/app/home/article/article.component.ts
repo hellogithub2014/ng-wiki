@@ -1,3 +1,4 @@
+import { ArticleService } from './../../core/article.service';
 import { Observable } from 'rxjs/Rx';
 import { LoginService, User } from '../../core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,6 +21,7 @@ export class ArticleComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private loginService: LoginService,
+    private articleService: ArticleService,
     public toastr: ToastsManager,
     private vcr: ViewContainerRef
   ) {
@@ -29,6 +31,9 @@ export class ArticleComponent implements OnInit {
   ngOnInit() {
     this.toastr.setRootViewContainerRef(this.vcr);
     this.loginService.loginUser.subscribe(user => this.user = user);
+
+    this.articleService.getArticleLikesFlag(this.article.id, this.user ? this.user.id : -1)
+      .subscribe(flag => this.likesFlag = flag); // 查询是否给此文章点过赞，若为登录，则统一是未点赞
   }
 
   /**
@@ -39,8 +44,15 @@ export class ArticleComponent implements OnInit {
    * @memberof ArticleListComponent
    */
   showDetail() {
-    this.article.visitCount++;
-    this.router.navigate(['../article-detail', this.article.id], { relativeTo: this.route });
+    this.articleService.addArticleVisitCount(this.article.id)
+      .subscribe(result => {
+        if (result) {
+          this.article.visitCount++;
+          this.router.navigate(['../article-detail', this.article.id], { relativeTo: this.route });
+        } else {
+          console.error(`增加文章阅读量失败`);
+        }
+      });
   }
 
 
@@ -49,23 +61,43 @@ export class ArticleComponent implements OnInit {
    *
    * @memberof ArticleComponent
    */
-  toggleFavorite() {
+  toggleLike() {
     if (!this.user) {
       this.toastr.info('请先登录', '提示', {
         toastLife: 2500,
         positionClass: 'toast-top-center'
       });
     } else {
-      if (this.likesFlag) { // 已点过赞，则取消点赞
-        (this.article.likesCount > 0) ? this.article.likesCount-- : 0;
-      } else { // 未点赞
-        this.article.likesCount++;
-      }
-      this.likesFlag = !this.likesFlag;
+      this.articleService.toggleArticleLikesCount(this.article.id, this.user.id)
+        .subscribe(result => {
+          if (!result) { // result标志后台操作是否成功
+            return;
+          }
+
+          if (this.likesFlag) { // 已点过赞，则取消点赞
+            (this.article.likesCount > 0) ? this.article.likesCount-- : 0;
+          } else { // 未点赞
+            this.article.likesCount++;
+          }
+          this.likesFlag = !this.likesFlag;
+        });
     }
   }
 
-  share() {
 
+  /**
+   * 分享文章
+   *
+   * @memberof ArticleComponent
+   */
+  share() {
+    this.articleService.addArticleSharedCount(this.article.id)
+      .subscribe(result => {
+        if (result) {
+          this.article.sharedCount++;
+        } else {
+          console.error(`分享文章失败`);
+        }
+      });
   }
 }

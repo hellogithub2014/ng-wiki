@@ -11,7 +11,7 @@
     </md-card-header>
     <md-card-content (click)='showDetail()'>{{article?.content}}</md-card-content>
     <md-card-actions>
-        <md-icon (click)="toggleFavorite()">favorite</md-icon> {{article?.likesCount}}
+        <md-icon (click)="toggleLike()">favorite</md-icon> {{article?.likesCount}}
         <md-icon (click)="share()">share</md-icon>{{article?.sharedCount}}
     </md-card-actions>
 </md-card>
