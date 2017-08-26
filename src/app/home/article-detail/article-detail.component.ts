@@ -8,7 +8,7 @@ import { ArticleService } from '../../core/article.service';
 @Component({
   selector: 'article-detail',
   templateUrl: './article-detail.component.html',
-  styleUrls: ['./article-detail.component.css']
+  styleUrls: ['./article-detail.component.css'],
 })
 export class ArticleDetailComponent implements OnInit {
   articleId: number;

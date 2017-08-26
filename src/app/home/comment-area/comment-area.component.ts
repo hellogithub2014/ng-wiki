@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ToastService, toastServiceProvider } from './../../core/services/toast.service';
+import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 
 import { Article } from '../../core/article';
 import { User } from './../../core/user';
@@ -10,7 +11,8 @@ import { WriteCommentComponent } from './../write-comment/write-comment.componen
 @Component({
   selector: 'comment-area',
   templateUrl: './comment-area.component.html',
-  styleUrls: ['./comment-area.component.css']
+  styleUrls: ['./comment-area.component.css'],
+  providers: [toastServiceProvider]
 })
 export class CommentAreaComponent implements OnInit {
   @Input() article: Article;
@@ -21,6 +23,8 @@ export class CommentAreaComponent implements OnInit {
   constructor(
     public commentService: CommentService,
     public loginService: LoginService,
+    private toastService: ToastService,
+    private vcr: ViewContainerRef,
   ) {
     this.commentContent = '';
   }
@@ -63,6 +67,7 @@ export class CommentAreaComponent implements OnInit {
         if (result) {
           this.comments = [...this.comments, comment];
           this.commentContent = '';
+          this.toastService.success('添加评论成功');
         } else {
           console.error(`添加评论失败`);
         }
@@ -124,6 +129,7 @@ export class CommentAreaComponent implements OnInit {
           ];
         } else {
           console.error(`添加评论回复失败`);
+          this.toastService.error('添加评论回复失败');
         }
       },
       error => console.error(`添加评论回复失败`)

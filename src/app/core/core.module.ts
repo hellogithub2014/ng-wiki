@@ -1,3 +1,5 @@
+import { ToastService } from './services/toast.service';
+import { DataService } from './services/data.service';
 import { CommentService } from './services/comment.service';
 import { DialogService } from './dialog.service';
 import { LoginService } from './login.service';
@@ -17,6 +19,8 @@ import { CommonModule } from '@angular/common';
     LoginService,
     DialogService,
     CommentService,
+    DataService,
+    // ToastService,
   ],
 })
 export class CoreModule { }

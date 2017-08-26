@@ -1,3 +1,4 @@
+import { ToastService, toastServiceProvider } from '../../core/services/toast.service';
 import { ArticleService } from './../../core/article.service';
 import { Observable } from 'rxjs/Rx';
 import { LoginService, User } from '../../core';
@@ -5,12 +6,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Article } from './../../core/article';
 import { Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
   selector: 'article',
   templateUrl: './article.component.html',
-  styleUrls: ['./article.component.css']
+  styleUrls: ['./article.component.css'],
+  providers: [toastServiceProvider]
 })
 export class ArticleComponent implements OnInit {
   @Input() article: Article;
@@ -22,14 +23,13 @@ export class ArticleComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private articleService: ArticleService,
-    public toastr: ToastsManager,
-    private vcr: ViewContainerRef
+    private vcr: ViewContainerRef,
+    private toastService: ToastService,
   ) {
     this.likesFlag = false;
   }
 
   ngOnInit() {
-    this.toastr.setRootViewContainerRef(this.vcr);
     this.loginService.loginUser.subscribe(user => this.user = user);
 
     this.articleService.getArticleLikesFlag(this.article.id, this.user ? this.user.id : -1)
@@ -63,7 +63,7 @@ export class ArticleComponent implements OnInit {
    */
   toggleLike() {
     if (!this.user) {
-      this.toastr.info('请先登录', '提示', {
+      this.toastService.info('请先登录', '提示', {
         toastLife: 2500,
         positionClass: 'toast-top-center'
       });

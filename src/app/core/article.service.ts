@@ -114,7 +114,7 @@ export class ArticleService {
    */
   toggleArticleLikesCount(articleId: number, userId: number): Observable<boolean> {
     return this.http.post(this.toggleArticleLikesFlagUrl,
-      JSON.stringify({ articleId, userId }), {
+      JSON.stringify({ articleId, likerId: userId }), {
         headers: new Headers({ 'Content-Type': 'application/json' })
       })
       .map(res => res.json());
@@ -130,7 +130,7 @@ export class ArticleService {
    */
   getArticleLikesFlag(articleId: number, userId: number): Observable<boolean> {
     return this.http.post(this.getArticleLikesFlagUrl,
-      JSON.stringify({ articleId, userId }), {
+      JSON.stringify({ articleId, likerId: userId }), {
         headers: new Headers({ 'Content-Type': 'application/json' })
       })
       .map(res => res.json());
