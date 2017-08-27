@@ -11,16 +11,16 @@ export class ToastService {
   }
 
   error(message: string, title?: string, options?: any): Promise<Toast> {
-    return this.toastr.success(message, title, options);
+    return this.toastr.error(message, title, options);
   }
   info(message: string, title?: string, options?: any): Promise<Toast> {
-    return this.toastr.success(message, title, options);
+    return this.toastr.info(message, title, options);
   }
   success(message: string, title?: string, options?: any): Promise<Toast> {
     return this.toastr.success(message, title, options);
   }
   warning(message: string, title?: string, options?: any): Promise<Toast> {
-    return this.toastr.success(message, title, options);
+    return this.toastr.warning(message, title, options);
   }
 
 }

@@ -36,11 +36,9 @@ export class ArticleService {
       })
       .map(res => {
         const article = new Article(res.json(), authorId, title, content);
-        this.articles.push(article);
+        // this.articles.push(article);
         return article;
       });
-
-    // return new Article(ulid(), authorId, title, content);
   }
 
   getAllArticles(): Observable<Article[]> {

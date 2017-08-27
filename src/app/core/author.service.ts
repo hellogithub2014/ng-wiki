@@ -1,25 +1,30 @@
+import { DataService } from './services/data.service';
 import { Http, Response } from '@angular/http';
 import { ArticleService } from './article.service';
-import { Author, mockAuthors } from './author';
-import { Article, mockArticles } from './article';
+import { Author } from './author';
+import { Article } from './article';
 import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs/Rx';
 
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AuthorService {
-  private authorsSubject: BehaviorSubject<Author[]> = new BehaviorSubject(mockAuthors);
+  private addAuthorUrl = '/ngWikiBe/users/add-author';
+  private authorsSubject: BehaviorSubject<Author[]> = new BehaviorSubject([]);
   private authors: Author[] = [];
 
   constructor(
     public http: Http,
-    private articleService: ArticleService
-  ) {
-    // this.authors = mockAuthors;
-    // this.mockSomeArticlesToAuthors();
-  }
+    private articleService: ArticleService,
+    private dataService: DataService,
+  ) { }
 
   getAllAuthors(): Observable<Author[]> {
+    // 先看缓存中有没有数据
+    if (this.authors.length > 0) {
+      return Observable.of(this.authors);
+    }
+    // 没有再去后台查询
     return this.http.get('/ngWikiBe/users/author-list')
       .map((res: Response) => res.json())
       .do(items => {
@@ -67,9 +72,34 @@ export class AuthorService {
     this.authorsSubject.next(this.authors);
   }
 
-  addAuthor(newAuthor: Author) {
-    this.authors = [...this.authors, newAuthor];
-    this.authorsSubject.next(this.authors);
+  /**
+   * 注册成为新用户
+   *
+   * @param {{
+   *     name: string,
+   *     ystNumber: string,
+   *     department: string,
+   *     speciality: string,
+   *     hobby: string,
+   *   }} authorInfo
+   * @returns {Observable<boolean>}  注册是否成功
+   * @memberof AuthorService
+   */
+  addAuthor(authorInfo: {
+    name: string,
+    ystNumber: string,
+    department: string,
+    speciality: string,
+    hobby: string,
+  }): Observable<Author> {
+    return this.dataService.postData(this.addAuthorUrl, authorInfo)
+      .map((authorId: number) => {
+        const newAuthor: Author = Object.assign({}, authorInfo, { id: authorId, articles: [] });
+        // 在登录后才将其加入authors中
+        // this.authors = [...this.authors, newAuthor];
+        // this.authorsSubject.next(this.authors);
+        return newAuthor;
+      });
   }
 
   unshiftAuthor(newAuthor: Author) {
@@ -82,25 +112,4 @@ export class AuthorService {
     this.authorsSubject.next(this.authors);
   }
 
-  /**
-   * mock数据
-   *
-   *
-   * @memberof AuthorService
-   */
-  mockSomeArticlesToAuthors() {
-    this.authors = this.authors.map((author, index) => {
-      const articlesCountPerAuthor = mockArticles.length / this.authors.length; // 每个作者能分到的文章数
-      const startIndex = index * articlesCountPerAuthor; // 分配给他的初始文章数索引
-
-      for (let i = startIndex; i < startIndex + articlesCountPerAuthor; i++) {
-        mockArticles[i].authorId = author.id; // 文章分配作者
-        author.articles = [...author.articles, mockArticles[i].id]; // 作者分配文章
-      }
-
-      return author;
-    });
-
-    this.authorsSubject.next(this.authors);
-  }
 }

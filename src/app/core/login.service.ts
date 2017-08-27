@@ -1,16 +1,19 @@
+import { DataService } from './services/data.service';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { User } from './user';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class LoginService {
+  private loginrUrl = '/ngWikiBe/users/login';
+
   private status: LoginStatus;
   private user: User;
 
   private status$$: BehaviorSubject<LoginStatus>;
   private user$$: BehaviorSubject<User>;
 
-  constructor() {
+  constructor(private dataService: DataService) {
     this.status$$ = new BehaviorSubject(LoginStatus.LOGOUT);
     this.user$$ = new BehaviorSubject(null);
     this.update(null, LoginStatus.LOGOUT);
@@ -24,9 +27,21 @@ export class LoginService {
     this.status$$.next(this.status);
   }
 
-  login(user: User): Observable<boolean> {
-    this.update(user, LoginStatus.LOGIN);
-    return Observable.of(true);
+  /**
+   * 登录，若成功了发射出User对象，失败了发射错误信息
+   *
+   * @param {{ name: string, ystNumber: string }} userInfo  待校验的资料
+   * @returns {(Observable<string | User>)}
+   * @memberof LoginService
+   */
+  login(userInfo: { name: string, ystNumber: string }): Observable<{ status: boolean, user?: User, errMsg?: string }> {
+    return this.dataService.postData(this.loginrUrl, userInfo)
+      .map((result: { status: boolean, user?: User, errMsg?: string }) => {
+        if (result.status) {
+          this.update(result.user, LoginStatus.LOGIN); // 登录成功，更新相关状态
+        }
+        return result;
+      });
   }
 
 

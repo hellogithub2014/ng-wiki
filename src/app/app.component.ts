@@ -12,7 +12,8 @@ import { Http } from '@angular/http';
 })
 export class AppComponent implements OnInit {
   currentUser: User;
-  availableOperation: string;
+  availableNavLink: string;
+  operationsAfterLogin: any[]; // 发现将类型设为Primeng的menuitem语法检查会失败
 
   constructor(
     public loginService: LoginService,
@@ -20,7 +21,20 @@ export class AppComponent implements OnInit {
     public router: Router,
     public http: Http
   ) {
-    this.availableOperation = '登录';
+    this.availableNavLink = '登录';
+    this.operationsAfterLogin = [
+      {
+        label: '。。。', icon: 'fa-check', // 随便设一个label，等到登录成功后修改掉
+        items: [
+          [
+            {
+              label: '分类1',
+              items: [{ label: '注销', icon: 'fa-plus', command: (e) => this.logout() }]
+            },
+          ],
+        ]
+      },
+    ];
   }
 
   ngOnInit() {
@@ -29,10 +43,11 @@ export class AppComponent implements OnInit {
       .subscribe(({ hasLogin, user }) => {
         if (hasLogin && user) {
           this.currentUser = user;
-          this.availableOperation = '注销';
+          this.availableNavLink = '注销';
+          this.operationsAfterLogin[0].label = this.currentUser.name; // 修改注销的下拉菜单的名字
         } else {
           this.currentUser = null;
-          this.availableOperation = '登录';
+          this.availableNavLink = '登录';
         }
       });
   }

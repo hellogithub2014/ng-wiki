@@ -31,10 +31,6 @@ export class WriteArticleComponent implements OnInit, CanComponentDeactivate {
   }
 
   ngOnInit() {
-    // this.route.params
-    //   .map((params: Params) => this.articleId = params['articleId'])
-    //   .switchMap((articleId: string) => this.articleService.getArticleById(articleId))
-
     // 获取作者流
     this.route.params
       .map((params: Params) => {
@@ -56,6 +52,7 @@ export class WriteArticleComponent implements OnInit, CanComponentDeactivate {
   saveArticle(article: { title: string, content: string }) {
     this.articleService.createArticle(this.author.id, article.title, article.content)
       .subscribe(newArticle => {
+        // createArticle成功时，后台数据库都已经存好了，前端只要操作一些内存中的数据即可
         this.authorService.addArticleToAuthor(newArticle, this.author);
         this.articleService.addArticles(newArticle);
 

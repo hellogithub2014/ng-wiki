@@ -1,26 +1,28 @@
+import { toastServiceProvider, ToastService } from './../core/services/toast.service';
 import { WikiValidators } from '../shared/validators/validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../core/login.service';
 import { User } from '../core/user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthorService } from '../core/author.service';
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  providers: [toastServiceProvider]
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup; // <--- heroForm is of type FormGroup
 
-  user: User;
+  userInfo: { name: string, ystNumber: string };
 
 
   formErrors = {
     'name': '',
     'ystNumber': '',
-    'email': '',
+    // 'email': '',
   };
 
   validationMessages = {
@@ -42,8 +44,10 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authorService: AuthorService,
+    private vcr: ViewContainerRef,
+    private toastService: ToastService,
   ) {
-    this.user = new User();
+    this.userInfo = { name: '', ystNumber: '' };
     this.createForm();
   }
 
@@ -60,7 +64,6 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       name: ['', [Validators.required]], // 初始值、验证器
       ystNumber: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6), WikiValidators.onlyNumber]],
-      email: '',
     });
     this.loginForm.valueChanges
       .subscribe(data => this.onValueChanged(data));
@@ -91,18 +94,22 @@ export class LoginComponent implements OnInit {
   login() {
     const loginModel = this.loginForm.value;
 
-    this.user = Object.assign({}, this.user, {
+    this.userInfo = Object.assign({}, this.userInfo, {
       name: loginModel.name as string,
       ystNumber: loginModel.ystNumber as string,
-      email: loginModel.email as string,
     });
 
-    this.loginService.login(this.user)
-      .filter(loginStatus => loginStatus === true)
-      .do(_ => {
-        this.authorService.unshiftAuthor(this.user); // 将用户加入作者队列中的最前面
-      })
-      .subscribe(_ => this.router.navigate(['/home']));
+    this.loginService.login(this.userInfo)
+      .subscribe(result => {
+        if (!result.status) { // 登录失败
+          this.toastService.error(result.errMsg);
+          console.error(result.errMsg);
+        } else { // 登录成功
+          this.toastService.success('登录成功');
+          this.authorService.unshiftAuthor(result.user); // 将用户加入作者队列中的最前面
+          this.router.navigate(['/home']);
+        }
+      });
   }
 
 }

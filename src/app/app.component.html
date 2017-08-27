@@ -18,15 +18,10 @@
                     <a class="nav-link" routerLink="/join" routerLinkActive="active" href="#">加入我们</a>
                 </li>
                 <li class="nav-item  col-md-4">
-                    {{currentUser?.name}}
-                    <a *ngIf="!currentUser" class="nav-link" routerLink="/login" routerLinkActive="active" href="#">{{availableOperation}}</a>
-                    <button *ngIf="currentUser" type="button" (click)='logout()'>{{availableOperation}}</button>
+                    <a *ngIf="!currentUser" class="nav-link" routerLink="/login" routerLinkActive="active" href="#">{{availableNavLink}}</a>
+                    <p-megaMenu *ngIf="currentUser" [model]="operationsAfterLogin" class="nav-link"></p-megaMenu>
                 </li>
             </ul>
-            <!-- <form class="form-inline my-2 my-lg-0 col-md-2">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form> -->
         </div>
     </nav>
 </ng-container>

@@ -6,6 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MegaMenuModule } from 'primeng/primeng';
+import { ToastModule } from 'ng2-toastr/ng2-toastr';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -21,6 +23,8 @@ import { LoginComponent } from './login/login.component';
     FormsModule,
     HttpModule,
     NgbModule.forRoot(),
+    ToastModule.forRoot(),
+    MegaMenuModule,
     AppRoutingModule,
     CoreModule,
     ReactiveFormsModule,
