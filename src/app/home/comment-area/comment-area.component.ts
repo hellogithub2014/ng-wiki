@@ -90,34 +90,6 @@ export class CommentAreaComponent implements OnInit {
       date: '1970-01-01 00:00:00'
     };
 
-    // 存储此回复到数据库
-    // const storeComment$ = this.commentService.storeComment(reply)
-    //   .map(replyId => Object.assign(reply, { id: replyId }));
-
-    // // 将此回复加入文章的评论数组,这样就可以根据reply的id来查找回复
-    // const addArticleCommentPromise = storeComment$
-    //   .switchMap(storedReply => this.commentService.addArticleComment(this.article, storedReply))
-    //   .toPromise();
-
-    // // 将回复缓存起来
-    // const addReply2CommentPromise = storeComment$
-    //   .switchMap(storedReply => this.commentService.addReply2Comment(this.article.id, comment.id, storedReply.id))
-    //   .toPromise();
-
-    // // 等到两个都成功了再更新评论数组
-    // Promise.all([addArticleCommentPromise, addReply2CommentPromise])
-    //   .then(([result1, result2]) => {
-    //     if (result1 && result2) {
-    //       comment = Object.assign({}, comment); // 构造一个新对象，以让变更检测起作用
-    //       this.comments = [
-    //         ...this.comments.slice(0, commentIndex),
-    //         comment,
-    //         ...this.comments.slice(commentIndex + 1)
-    //       ];
-    //     }
-    //   })
-    //   .catch(error => console.error(`添加回复失败`, error));
-
     this.commentService.addReply2Comment(reply)
       .subscribe(result => {
         if (result) {

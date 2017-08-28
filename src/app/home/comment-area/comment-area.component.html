@@ -11,8 +11,10 @@
             </div>
         </div>
         <div class="row">
-            <!-- 专门的评论组件，每条评论登录后可以回复，评论有级别，类似金字塔 -->
-
+            <!-- 
+              专门的评论组件，每条评论登录后可以回复，评论有级别，类似金字塔.
+              comments数组是直接回复文章的那些评论
+             -->
             <div *ngFor="let comment of comments;let i=index;" class="comment-item-container col-md-11">
                 <div class="row">
                     <comment class="col-md-10" [comment]='comment' [canReply]='!!user' (addReply)="reply($event,i)"></comment>

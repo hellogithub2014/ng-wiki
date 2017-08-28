@@ -22,6 +22,7 @@ import { WriteArticleComponent } from './write-article/write-article.component';
 import { CommentAreaComponent } from './comment-area/comment-area.component';
 import { CommentComponent } from './comment/comment.component';
 import { WriteCommentComponent } from './write-comment/write-comment.component';
+import { CommentReplyComponent } from './comment-reply/comment-reply.component';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { WriteCommentComponent } from './write-comment/write-comment.component';
     CommentAreaComponent,
     CommentComponent,
     WriteCommentComponent,
+    CommentReplyComponent,
   ],
   providers: []
 })

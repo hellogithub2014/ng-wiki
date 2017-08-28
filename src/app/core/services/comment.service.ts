@@ -65,30 +65,38 @@ export class CommentService {
   /**
    * 回复文章评论，成功时流中产生true，失败发出false
    *
+   * 所有的回复，不管是针对一级评论还是其他评论回复，都属于一级评论下的回复列表。
+   * 每个回复的to字段可以判断他是具体回复谁的
+   *
    * @param {Comment} comment
    * @returns {Observable<boolean>}  结果流
    * @memberof CommentService
    */
   addReply2Comment(comment: Comment): Observable<boolean> {
-    const repliedComment = this.getCommentById(comment.articleId, comment.to); // 被回复的评论
-    if (repliedComment) {
-      return this.http.post(this.addCommentReplyUrl, // 发送后台请求
-        JSON.stringify(comment), {
-          headers: new Headers({ 'Content-Type': 'application/json' })
-        })
-        .map(res => {
-          const result: { commentId: number, commentDate: string; } = res.json(); // 后台返回结果，失败时为null
-          if (result) {
-            comment.id = result.commentId;
-            comment.date = result.commentDate;
-            this.commentsCahe.get(comment.articleId).push(comment); // 评论放入缓存
-            repliedComment.replyList.push(comment.id); // 存储评论的回复
-            return true;
-          }
-          return false;
-        });
+    // 找到此comment所属的一级评论，一级评论是指直接回复文章的评论
+    let articleComment = comment;
+    while (articleComment && articleComment.to !== -1) {
+      articleComment = this.getCommentById(comment.articleId, articleComment.to);
     }
-    return Observable.of(false);
+
+    if (!articleComment) { return Observable.of(false); }
+
+    return this.http.post(this.addCommentReplyUrl, // 发送后台请求
+      JSON.stringify({ comment, belong: articleComment.id }), { // belong表示此回复是属于哪个一级评论下的
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      })
+      .map(res => {
+        const result: { commentId: number, commentDate: string; } = res.json(); // 后台返回结果，失败时为null
+        if (result) {
+          comment.id = result.commentId;
+          comment.date = result.commentDate;
+          this.commentsCahe.get(comment.articleId).push(comment); // 评论放入缓存
+          articleComment.replyList.push(comment.id); // 存储评论的回复
+          return true;
+        }
+        return false;
+      });
+
   }
 
   /**

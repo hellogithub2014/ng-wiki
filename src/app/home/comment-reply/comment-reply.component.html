@@ -1,6 +1,5 @@
 <ng-container *ngIf='comment'>
-    <!-- comment.to等于-1表示此评论是直接回复的文章，而不是回复其他评论 -->
-    <div class="container">
+    <div class="container indent">
         <p class="row">
             <a href="" class="col-md-2">{{comment.userName}}</a>
             <span class="col-md-3" *ngIf='comment.to !== -1'>回复 <a href="">{{userOfCommentTo}}</a> </span>
@@ -8,9 +7,7 @@
         </p>
         <p class="row" (mouseenter)='displayReplyButton()' (mouseleave)='hideReplyButton()'>
             <span class="col-md-11">{{comment.content}} </span>
-            <button [hidden]='!canReplyButtonDisplay' class="btn btn-info col-md-1" *ngIf="canReply" (click)="reply(comment.id)" type="button">回复</button>
+            <button [hidden]='!canReplyButtonDisplay' class="btn btn-info col-md-1" *ngIf="canReply" (click)="reply()" type="button">回复</button>
         </p>
-        <!-- 此评论的回复列表 -->
-        <comment-reply *ngFor="let commentReply of relpyList" [comment]='commentReply' [canReply]='canReply' (addReply)="reply(commentReply.id,$event)"></comment-reply>
     </div>
 </ng-container>
